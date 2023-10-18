@@ -1,6 +1,11 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from .models import Corporation
 
 
 def index(request):
-    return HttpResponse("Главная страница")
+    text_head = 'Заголовок'
+    corporations = Corporation.objects.all()
+    num_corp = Corporation.objects.all().count()
+    context = {'text_head': text_head, 'corporations': corporations,
+               'num_corp': num_corp}
+    return render(request, 'rezon/index.html', context)

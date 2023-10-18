@@ -69,7 +69,7 @@ class FiscalStorage(models.Model):
         return reverse('fiscal-storage-detail', args=[str(self.number)])
 
     class Meta:
-        ordering = ["number"]
+        ordering = ["validity"]
 
 
 class Ofd(models.Model):
@@ -274,6 +274,16 @@ class Station(models.Model):
     def __str__(self):
         return self.stname
 
+    def display_printers(self):
+        return ', '.join([printers.stname for printers in self.printers.all()])
+
+    display_printers.short_description = 'Принтеры'
+
+    def display_optequip(self):
+        return ', '.join([optequip.stname for optequip in self.optequip.all()])
+
+    display_optequip.short_description = 'Дополнительное оборудование'
+
     def get_absolute_url(self):
         return reverse('station-detail', args=[str(self.id)])
 
@@ -318,10 +328,6 @@ class Establishment(models.Model):
     contact = models.ManyToManyField('Contact',
                                      help_text="Выберите контактное лицо",
                                      verbose_name="Контактное лицо")
-    photo = models.ImageField(upload_to='images',
-                              help_text="Прикрепите фото заведения (необязательно)",
-                              verbose_name="Фото заведения",
-                              null=True, blank=True)
     other = models.CharField(max_length=200,
                              help_text="Добавьте заметку",
                              verbose_name="Примечание",
@@ -329,6 +335,16 @@ class Establishment(models.Model):
 
     def __str__(self):
         return '%s %s' % (self.name, self.address)
+
+    def display_stations(self):
+        return ', '.join([stations.stname for stations in self.stations.all()])
+
+    display_stations.short_description = 'Станции'
+
+    def display_contact(self):
+        return ', '.join([contact.stname for contact in self.contact.all()])
+
+    display_contact.short_description = 'Контакты'
 
     def get_absolute_id(self):
         return reverse('establishment-detail', args=[str(self.id)])
@@ -361,6 +377,10 @@ class Corporation(models.Model):
                              help_text="Добавьте заметку",
                              verbose_name="Примечание",
                              null=True, blank=True)
+
+    def display_establishments(self):
+        return ', '.join([establishments.name for establishments in self.establishments.all()])
+    display_establishments.short_description = 'Точки'
 
     def __str__(self):
         return self.name
