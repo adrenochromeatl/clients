@@ -34,6 +34,10 @@ class Legal(models.Model):
                            help_text="Введите ИНН юр. лица",
                            verbose_name="ИНН",
                            null=True, blank=True)
+    other = models.CharField(max_length=200,
+                             help_text="Добавьте заметку",
+                             verbose_name="Примечание",
+                             null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -53,6 +57,10 @@ class FiscalStorage(models.Model):
     model = models.CharField(max_length=16,
                              help_text="Введите модель ФН(Например: 'Ин15-3'",
                              verbose_name="Модель")
+    other = models.CharField(max_length=200,
+                             help_text="Добавьте заметку",
+                             verbose_name="Примечание",
+                             null=True, blank=True)
 
     def __str__(self):
         return '%s, %s' % (self.number, self.validity)
@@ -68,9 +76,9 @@ class Ofd(models.Model):
     name = models.CharField(max_length=25,
                             help_text="Введите наименование ОФД",
                             verbose_name="Название")
-    inn = models.IntegerField(max_length=10,
-                              help_text="Введите ИНН ОФД",
-                              verbose_name="ИНН")
+    inn = models.CharField(max_length=10,
+                           help_text="Введите ИНН ОФД",
+                           verbose_name="ИНН")
     address = models.CharField(max_length=25,
                                help_text="Введите адрес для подключения",
                                verbose_name="Адрес, не IP")
@@ -139,9 +147,9 @@ class RDP(models.Model):
     password = models.CharField(max_length=20,
                                 help_text="Введите пароль",
                                 verbose_name="Пароль")
-    other = models.CharField(max_length=500,
-                             help_text="Введите дополнительные сведения",
-                             verbose_name="Доп. сведения",
+    other = models.CharField(max_length=200,
+                             help_text="Добавьте заметку",
+                             verbose_name="Примечание",
                              null=True, blank=True)
 
     def __str__(self):
@@ -155,14 +163,18 @@ class Printers(models.Model):
     model = models.CharField(max_length=20,
                              help_text="Введите модель принтера",
                              verbose_name="Модель принтера")
-    sn = models.IntegerField(max_length=30,
-                             help_text="Введите серийный номер принтера (необязательно)",
-                             verbose_name="Серийный номер",
-                             null=True, blank=True)
+    sn = models.CharField(max_length=30,
+                          help_text="Введите серийный номер принтера (необязательно)",
+                          verbose_name="Серийный номер",
+                          null=True, blank=True)
     name = models.CharField(max_length=20,
                             help_text="Введите имя в iiko (Например отделение, где размещен принтер",
                             verbose_name="Имя в iiko",
                             null=True, blank=True)
+    other = models.CharField(max_length=200,
+                             help_text="Добавьте заметку",
+                             verbose_name="Примечание",
+                             null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -183,6 +195,10 @@ class OptEquip(models.Model):
                           help_text="Введите серийный номер оборудования (необязательно)",
                           verbose_name="Серийный номер",
                           null=True, blank=True)
+    other = models.CharField(max_length=200,
+                             help_text="Добавьте заметку",
+                             verbose_name="Примечание",
+                             null=True, blank=True)
 
     def __str__(self):
         return '%s, %s' % (self.type_equip, self.model)
@@ -232,10 +248,10 @@ class Station(models.Model):
     stname = models.CharField(max_length=20,
                               help_text="Введите имя как в iiko",
                               verbose_name="Имя станции")
-    fr = models.ManyToManyField('FiscalRegistrar',
-                                help_text="Выберите ФР, если он(они) подключен к этой станции",
-                                verbose_name="Фискальный регистратор",
-                                null=True, blank=True)
+    fr = models.ForeignKey('FiscalRegistrar', on_delete=models.DO_NOTHING,
+                           help_text="Выберите ФР, если он(они) подключен к этой станции",
+                           verbose_name="Фискальный регистратор",
+                           null=True, blank=True)
     printers = models.ManyToManyField('Printers',
                                       help_text="Выберите принтер или принтеры, если они привязаны к это станции",
                                       verbose_name="Принтеры",
@@ -250,6 +266,10 @@ class Station(models.Model):
     anypass = models.CharField(max_length=20,
                                help_text="Введите пароль Anydesk",
                                verbose_name="Пароль Anydesk")
+    other = models.CharField(max_length=200,
+                             help_text="Добавьте заметку",
+                             verbose_name="Примечание",
+                             null=True, blank=True)
 
     def __str__(self):
         return self.stname
@@ -273,6 +293,10 @@ class Contact(models.Model):
                               help_text="Введите ссылку/логин в Telegram",
                               verbose_name="Telegram",
                               null=True, blank=True)
+    other = models.CharField(max_length=200,
+                             help_text="Добавьте заметку",
+                             verbose_name="Примечание",
+                             null=True, blank=True)
 
     def __str__(self):
         return '%s, %s' % (self.name, self.phone)
@@ -285,22 +309,26 @@ class Establishment(models.Model):
     name = models.CharField(max_length=50,
                             help_text="Введите наименование заведения",
                             verbose_name="Заведение")
-    stations = models.ForeignKey('Station', on_delete=models.DO_NOTHING,
-                                 help_text="Выберите станции, установленные в этом заведении",
-                                 verbose_name="Станции")
+    stations = models.ManyToManyField('Station',
+                                      help_text="Выберите станции, установленные в этом заведении",
+                                      verbose_name="Станции")
     address = models.CharField(max_length=50,
                                help_text="Введите адрес заведения",
                                verbose_name="Адрес")
-    contact = models.ForeignKey('Contact', on_delete=models.DO_NOTHING,
-                                help_text="Выберите контактное лицо",
-                                verbose_name="Контактное лицо")
+    contact = models.ManyToManyField('Contact',
+                                     help_text="Выберите контактное лицо",
+                                     verbose_name="Контактное лицо")
     photo = models.ImageField(upload_to='images',
                               help_text="Прикрепите фото заведения (необязательно)",
                               verbose_name="Фото заведения",
                               null=True, blank=True)
+    other = models.CharField(max_length=200,
+                             help_text="Добавьте заметку",
+                             verbose_name="Примечание",
+                             null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return '%s %s' % (self.name, self.address)
 
     def get_absolute_id(self):
         return reverse('establishment-detail', args=[str(self.id)])
@@ -310,8 +338,9 @@ class Corporation(models.Model):
     name = models.CharField(max_length=50,
                             help_text="Введите наименование организации",
                             verbose_name="Организация")
-    iiko_server = models.GenericIPAddressField(help_text="Введите адрес сервера",
-                                               verbose_name="Сервер iiko")
+    iiko_server = models.CharField(max_length=50,
+                                   help_text="Введите адрес сервера",
+                                   verbose_name="Сервер iiko")
     port = models.IntegerField(help_text="Введите порт для подключения",
                                verbose_name="Порт", default="443")
     version = models.ForeignKey('Version', on_delete=models.DO_NOTHING,
@@ -325,10 +354,13 @@ class Corporation(models.Model):
                             help_text="Выберите RDP если есть",
                             verbose_name="RDP",
                             null=True, blank=True)
-    establishments = models.ForeignKey('Establishment',
-                                       on_delete=models.DO_NOTHING,
-                                       help_text="Выберите Предприятие",
-                                       verbose_name="Предприятие")
+    establishments = models.ManyToManyField('Establishment',
+                                            help_text='Выберите заведения, входящие в это предприятие',
+                                            verbose_name="Список точек")
+    other = models.CharField(max_length=200,
+                             help_text="Добавьте заметку",
+                             verbose_name="Примечание",
+                             null=True, blank=True)
 
     def __str__(self):
         return self.name
