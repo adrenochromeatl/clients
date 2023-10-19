@@ -1,16 +1,33 @@
 {% extends "rezon/base.html" %}
 {% block title %}Справочник компаний{% endblock title %}
-
 {% block header %}
     <h5>{{ text_head }}</h5>
 {% endblock header %}
 
 {% block content%}
     <div class="container-fluid my-2">
-        <div class="row">
-            <div class="col text-center">
-                <div>{{ text_body }}</div>
+        <div class="row my-2 text-white">
+            <div class="col mx-2 bg-primary">
+                Количество записей - {{ num_corp }}
             </div>
         </div>
+        <div class="row text-center text-dark lh-2">
+            <h3>Предприятия</h3>
+        </div>
+        {% if num_corp > 0 %}
+            <div class="row my-2">
+                {% for obj in corporations %}
+                    <table class="table text-start">
+                        <tbody>
+                            <tr>
+                                <td>{{ obj.name }}</td>
+                                <td>{{ obj.version }}</td>
+                                <td>{{ obj.display_establishments }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                {% endfor %}
+            </div>
+        {% endif %}
     </div>
 {% endblock content %}

@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from .models import Corporation, Establishment, Station, \
     TypeEq, Contact, Version, RDP, FiscalRegistrar, Printers, \
-    OptEquip, FiscalStorage, Ofd, Legal
+    OptEquip, FiscalStorage, Ofd, Legal, ModelFiscalStorage, ModelFiscalRegistrar
 
 
 class CorporationAdmin(admin.ModelAdmin):
@@ -73,3 +73,5 @@ admin.site.register(Legal)
 admin.site.register(RDP)
 admin.site.register(TypeEq)
 admin.site.register(Version)
+admin.site.register(ModelFiscalStorage)
+admin.site.register(ModelFiscalRegistrar)

@@ -54,9 +54,9 @@ class FiscalStorage(models.Model):
     validity = models.DateField(help_text="Введите дату окончания ФН",
                                 verbose_name="Срок действия ФН",
                                 null=True, blank=True)
-    model = models.CharField(max_length=16,
-                             help_text="Введите модель ФН(Например: 'Ин15-3'",
-                             verbose_name="Модель")
+    model = models.ForeignKey('ModelFiscalStorage', on_delete=models.DO_NOTHING,
+                              help_text="Введите модель ФН(Например: 'Ин15-3'",
+                              verbose_name="Модель")
     other = models.CharField(max_length=200,
                              help_text="Добавьте заметку",
                              verbose_name="Примечание",
@@ -208,9 +208,9 @@ class OptEquip(models.Model):
 
 
 class FiscalRegistrar(models.Model):
-    model = models.CharField(max_length=20,
-                             help_text="Введите модель оборудования",
-                             verbose_name="Модель")
+    model = models.ForeignKey('ModelFiscalRegistrar', on_delete=models.DO_NOTHING,
+                              help_text="Выберите модель оборудования",
+                              verbose_name="Модель")
     zn = models.CharField(max_length=30,
                           help_text="Введите ЗАВОДСКОЙ номер",
                           verbose_name="Заводской номер",
@@ -380,6 +380,7 @@ class Corporation(models.Model):
 
     def display_establishments(self):
         return ', '.join([establishments.name for establishments in self.establishments.all()])
+
     display_establishments.short_description = 'Точки'
 
     def __str__(self):
@@ -387,3 +388,27 @@ class Corporation(models.Model):
 
     def get_absolute_id(self):
         return reverse('corporation-detail', args=[str(self.id)])
+
+
+class ModelFiscalRegistrar(models.Model):
+    name = models.CharField(max_length=30,
+                            help_text="Введите модель ФР",
+                            verbose_name="Модель ФР")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ["name"]
+
+
+class ModelFiscalStorage(models.Model):
+    name = models.CharField(max_length=30,
+                            help_text="Введите модель Фискального Накопителя",
+                            verbose_name="Модель Фискального Накопителя")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ["name"]
