@@ -1,5 +1,4 @@
 {% extends "rezon/base.html" %}
-{% block title %}Справочник компаний{% endblock title %}
 {% block header %}
     <h5>{{ text_head }}</h5>
 {% endblock header %}
@@ -7,7 +6,7 @@
 {% block content%}
     <div class="container-fluid my-2">
         <div class="row my-2 text-white">
-            <div class="col mx-2 bg-primary">
+            <div class="col mx-2 bg-success">
                 Количество записей - {{ num_corp }}
             </div>
         </div>
@@ -16,17 +15,58 @@
         </div>
         {% if num_corp > 0 %}
             <div class="row my-2">
-                {% for obj in corporations %}
-                    <table class="table text-start">
-                        <tbody>
+                <table class="table text-start table-bordered indextable">
+                    <thead class="text-center">
+                        <th>Наименование</th>
+                        <th>Точки</th>
+                        <th>Версия</th>
+                        <th>Ссылка на Office/Chain</th>
+                        <th>Ссылка на веб морду</th>
+                    </thead>
+                    <tbody>
+                        {% for obj in corporations %}
                             <tr>
                                 <td>{{ obj.name }}</td>
-                                <td>{{ obj.version }}</td>
                                 <td>{{ obj.display_establishments }}</td>
+                                <td>{{ obj.version }}</td>
+                                <td>
+                                    <div class="copy-{{ obj.id }}">
+                                        <p class="copy-field-{{ obj.id }}" id="copy-field-{{ obj.id }}">{{ obj.iiko_server }}:{{ obj.port }}</p>
+                                        <p class="copy-alert">Адрес скопирован</p>
+                                        <button class="btn-light copy-btn-{{ obj.id }}">Копировать в буфер</button>
+                                    </div>
+                                </td>
+                                {% if obj.port == '443' %}
+                                    <td><a href="https://{{ obj.iiko_server }}:{{ obj.port }}/resto">Веб морда</a></td>
+                                {% else %}
+                                    <td><a href="http://{{ obj.iiko_server }}:{{ obj.port }}/resto">Веб морда</a></td>
+                                {% endif %}
                             </tr>
-                        </tbody>
-                    </table>
-                {% endfor %}
+                            <style type="text/css">
+                                .copy-alert {
+                                    display: none;
+                                    color: green;
+                                }
+                            </style>
+                            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+                            <script>
+                                $(function() {
+                                    function copyToClipboard(element) {
+                                        var $temp = $("<input>");
+                                        $("body").append($temp);
+                                        $temp.val($(element).text()).select();
+                                        document.execCommand("copy-{{ obj.id }}");
+                                        $temp.remove();
+                                    }
+                                    $(".copy-btn-{{ obj.id }}").on("click", function() {
+                                        copyToClipboard("#copy-field-{{ obj.id }}");
+                                        $(".copy-alert").fadeIn("slow");
+                                    });
+                                });
+                            </script>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         {% endif %}
     </div>

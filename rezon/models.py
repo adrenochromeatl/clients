@@ -218,6 +218,10 @@ class FiscalRegistrar(models.Model):
     rn = models.CharField(max_length=30,
                           help_text="Введите РЕГИСТРАЦИОННЫЙ номер",
                           verbose_name="Регистрационный номер")
+    reg_card = models.FileField(upload_to='reg_cards',
+                                verbose_name="Карточка ККТ",
+                                help_text="Прикрепите карточку ККТ",
+                                null=True, blank=True)
     legal = models.ForeignKey('Legal', on_delete=models.DO_NOTHING,
                               help_text="Выберите юр. лицо",
                               verbose_name="Юр. лицо, на которое зарегистрирован ФР")
