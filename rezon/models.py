@@ -252,10 +252,10 @@ class Station(models.Model):
     stname = models.CharField(max_length=20,
                               help_text="Введите имя как в iiko",
                               verbose_name="Имя станции")
-    fr = models.ForeignKey('FiscalRegistrar', on_delete=models.DO_NOTHING,
-                           help_text="Выберите ФР, если он(они) подключен к этой станции",
-                           verbose_name="Фискальный регистратор",
-                           null=True, blank=True)
+    fr = models.ManyToManyField('FiscalRegistrar',
+                                help_text="Выберите ФР, если он(они) подключен к этой станции",
+                                verbose_name="Фискальный регистратор",
+                                null=True, blank=True)
     printers = models.ManyToManyField('Printers',
                                       help_text="Выберите принтер или принтеры, если они привязаны к это станции",
                                       verbose_name="Принтеры",
@@ -300,6 +300,10 @@ class Contact(models.Model):
                                  help_text="Введите фамилию",
                                  verbose_name="Фамилия",
                                  null=True, blank=True)
+    position = models.CharField(max_length=20,
+                                help_text="Введите должность",
+                                verbose_name="Должность",
+                                null=True, blank=True)
     phone = models.CharField(max_length=11,
                              help_text="Введите номер телефона (с 7 без +)",
                              verbose_name="Номер телефона")
@@ -346,7 +350,7 @@ class Establishment(models.Model):
     display_stations.short_description = 'Станции'
 
     def display_contact(self):
-        return ', '.join([contact.stname for contact in self.contact.all()])
+        return ', '.join([contact.name for contact in self.contact.all()])
 
     display_contact.short_description = 'Контакты'
 

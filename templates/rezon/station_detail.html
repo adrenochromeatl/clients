@@ -1,0 +1,56 @@
+{% extends 'rezon/base.html' %}
+{% block content %}
+    <div class="container text-start">
+        <div class="row my-2">
+            <p><strong>Название станции: </strong>{{ station.stname }}</p>
+        </div>
+        <div class="row my-2">
+            <p><strong>Название ПК: </strong>{{ station.pcname }}</p>
+        </div>
+        <div class="row my-2">
+            <p><strong>Фискальные регистраторы:</strong></p>
+            {% for fr in station.fr.all %}
+                <a href="/fiscalregistrar/{{ fr.id }}" target="_blank">{{ fr.legal }}_{{ fr.rn }}</a>
+            {% endfor %}
+        </div>
+        <div class="row my-2">
+            <p><strong>Принтеры:</strong></p>
+            {% for printer in station.printers.all %}
+                <a href="/printer/{{ printer.id }}" target="_blank">{{ printer.model }}_{{ printer.name }}</a>
+            {% endfor %}
+        </div>
+        <div class="row my-2">
+            <p><strong>Доп. оборудование:</strong></p>
+            {% for obj in station.optequip.all %}
+                <a href="/optequip/{{ optequip.id }}" target="_blank">{{ optequip.type_equip }}_{{ optequip.model }}</a>
+            {% endfor %}
+        </div>
+        <div class="row my-2">
+            <strong>Логин Anydesk: </strong>
+            <p id="textcopylogin" class="textcopylogin">{{ station.anylogin }}</p>
+            <button class="copy-btn-login" onclick="copyFunctionLogin()">
+                <svg onclick="copyFunctionLogin()" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2Zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6ZM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1H2Z"></path>
+                </svg>
+            </button>
+            <p class="login-copied-alert">Адрес скопирован</p>
+        </div>
+        <div class="row my-2">
+            <strong>Пароль Anydesk: </strong>
+            <input type="checkbox" id="raz" class="del col-1"/>
+            <label for="raz" class="del col-1">Показать</label>
+            <div>
+                <p id="copytextpass" class="copytextpass">{{ station.anypass }}</p>
+                <button class="copy-btn-pass" onclick="copyFunctionPass()">
+                    <svg onclick="copyFunctionPass()" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V2Zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H6ZM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1H2Z"></path>
+                    </svg>
+                </button>
+                <p class="pass-copied-alert">Пароль скопирован</p>
+            </div>
+        </div>
+        <div class="row my-2">
+            <p><strong>Заметка: </strong>{{ station.other }}</p>
+        </div>
+    </div>
+{% endblock content %}

@@ -1,0 +1,29 @@
+{% extends 'rezon/base.html' %}
+{% block content %}
+    <div class="container text-start">
+        <div class="row my-2">
+            <p><strong>Название компании: </strong>{{ corporation.name }}</p>
+        </div>
+        <div class="row my-2">
+            <p><strong>Адрес сервера iiko: </strong>{{ corporation.iiko_server }}:{{ corporation.port }}</p>
+        </div>
+        <div class="row my-2">
+            <p><strong>Версия iiko: </strong>{{ corporation.version }}</p>
+        </div>
+        <div class="row my-2">
+            <p><strong>UID организации: </strong>{{ corporation.uid }}</p>
+        </div>
+        <div class="row my-2">
+            <p><strong>RDP сервера организации: </strong>{{ corporation.rdp }}</p>
+        </div>
+        <div class="row my-2">
+            <p><strong>Точки:</strong></p>
+            {% for est in corporation.establishments.all %}
+                <a href="/establishment/{{ est.id }}">{{ est.name }}</a>
+            {% endfor %}
+        </div>
+        <div class="row my-2">
+            <p><strong>Заметка: </strong>{{ corporation.other }}</p>
+        </div>
+    </div>
+{% endblock content %}

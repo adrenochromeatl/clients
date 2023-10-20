@@ -1,0 +1,50 @@
+{% extends "rezon/base.html" %}
+{% block content %}
+    <div class="row text-center text-dark lh-2">
+        <h4>Список станций в БД</h4>
+    </div>
+    {% if station %}
+        <table class="table table-striped table-bordered text-start">
+            <thead>
+                <tr>
+                    <th>Имя станции</th>
+                    <th>Имя ПК</th>
+                    <th>ФР(ы), подключенный к станции</th>
+                    <th>Принтеры, подключенные к станции</th>
+                    <th>Доп. оборудование</th>
+                    <th>Адрес anydesk</th>
+                    <th>Пароль anydesk</th>
+                    <th>Заметка</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj in station %}
+                    <tr>
+                        <td>{{ obj.stname }}</td>
+                        <td>{{ obj.pcname }}</td>
+                        <td>
+                            {% for fr in obj.fr.all %}
+                                <a href="/fiscalregistrar/{{ fr.id }}" target="_blank">{{ fr.legal }}_{{ fr.rn }}</a>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for printer in obj.printers.all %}
+                                <a href="/printer/{{ printer.id }}" target="_blank">{{ printer.model }}_{{ printer.name }}</a>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for optequip in obj.optequip.all %}
+                                <a href="/optequip/{{ optequip.id }}" target="_blank">{{ optequip.type_equip }}_{{ optequip.model }}</a>
+                            {% endfor %}
+                        </td>
+                        <td>{{ obj.anylogin }}</td>
+                        <td>{{ obj.anypass }}</td>
+                        <td>{{ obj.other }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>В базе данных нет ни одной компании</p>
+    {% endif %}
+{% endblock content %}

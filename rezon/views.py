@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Corporation
-from django.views.generic import ListView
+from .models import Corporation, Establishment, Station
+from django.views.generic import ListView, DetailView
 
 
 def index(request):
@@ -15,4 +15,28 @@ def index(request):
 class CorporationListView(ListView):
     model = Corporation
     context_object_name = 'corporation'
-    template_name = 'corporation_list.html'
+
+
+class CorporationDetailView(DetailView):
+    model = Corporation
+    context_object_name = 'corporation'
+
+
+class EstablishmentListView(ListView):
+    model = Establishment
+    context_object_name = 'establishment'
+
+
+class EstablishmentDetailView(DetailView):
+    model = Establishment
+    context_object_name = 'establishment'
+
+
+class StationListView(ListView):
+    model = Station
+    context_object_name = 'station'
+
+
+class StationDetailView(DetailView):
+    model = Station
+    context_object_name = 'station'
