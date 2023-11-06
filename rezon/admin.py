@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from .models import Corporation, Establishment, Station, \
-    TypeEq, Contact, Version, RDP, FiscalRegistrar, Printers, \
+    TypeEq, Contact, Version, RDP, FiscalRegistrar, Printer, \
     OptEquip, FiscalStorage, Ofd, Legal, ModelFiscalStorage, ModelFiscalRegistrar
 
 
@@ -46,11 +46,11 @@ class FiscalRegistrarAdmin(admin.ModelAdmin):
 admin.site.register(FiscalRegistrar, FiscalRegistrarAdmin)
 
 
-class PrintersAdmin(admin.ModelAdmin):
+class PrinterAdmin(admin.ModelAdmin):
     list_display = ('name', 'model')
 
 
-admin.site.register(Printers, PrintersAdmin)
+admin.site.register(Printer, PrinterAdmin)
 
 
 class OptEquipAdmin(admin.ModelAdmin):

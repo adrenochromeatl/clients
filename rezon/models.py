@@ -158,7 +158,7 @@ class RDP(models.Model):
         return reverse('rdp-detail', args=[str(self.id)])
 
 
-class Printers(models.Model):
+class Printer(models.Model):
     model = models.CharField(max_length=20,
                              help_text="Введите модель принтера",
                              verbose_name="Модель принтера")
@@ -249,19 +249,17 @@ class Station(models.Model):
                               null=True, blank=True)
     stname = models.CharField(max_length=20,
                               help_text="Введите имя как в iiko",
-                              verbose_name="Имя станции")
+                              verbose_name="Имя станции в iiko")
     fr = models.ManyToManyField('FiscalRegistrar',
                                 help_text="Выберите ФР, если он(они) подключен к этой станции",
-                                verbose_name="Фискальный регистратор",
-                                null=True, blank=True, related_name="+")
-    printers = models.ManyToManyField('Printers',
-                                      help_text="Выберите принтер или принтеры, если они привязаны к это станции",
-                                      verbose_name="Принтеры",
-                                      null=True, blank=True, related_name="+")
+                                verbose_name="Фискальный регистратор", blank=True)
+    printers = models.ManyToManyField('Printer',
+                                      help_text="Выберите принтер или принтеры, если они привязаны к это станции (в "
+                                                "iiko)",
+                                      verbose_name="Принтеры", blank=True)
     optequip = models.ManyToManyField('OptEquip',
                                       help_text="Выберите доп оборудование, если оно привязано к это станции",
-                                      verbose_name="Доп. оборудование",
-                                      null=True, blank=True, related_name="+")
+                                      verbose_name="Доп. оборудование", blank=True)
     anylogin = models.CharField(max_length=10,
                                 help_text="Введите логин Anydesk",
                                 verbose_name="Логин Anydesk")
@@ -294,6 +292,9 @@ class Contact(models.Model):
     name = models.CharField(max_length=20,
                             help_text="Введите Имя",
                             verbose_name="Имя")
+    corporation = models.ManyToManyField('Corporation',
+                                         help_text="Выберите Заведение (или несколько), с которыми работает контакт",
+                                         verbose_name="Заведения", blank=True)
     last_name = models.CharField(max_length=20,
                                  help_text="Введите фамилию",
                                  verbose_name="Фамилия",
@@ -327,13 +328,13 @@ class Establishment(models.Model):
                             verbose_name="Заведение")
     stations = models.ManyToManyField('Station',
                                       help_text="Выберите станции, установленные в этом заведении",
-                                      verbose_name="Станции")
+                                      verbose_name="Станции", blank=True)
     address = models.CharField(max_length=50,
                                help_text="Введите адрес заведения",
                                verbose_name="Адрес")
     contact = models.ManyToManyField('Contact',
                                      help_text="Выберите контактное лицо",
-                                     verbose_name="Контактное лицо")
+                                     verbose_name="Контактное лицо", blank=True)
     other = models.CharField(max_length=200,
                              help_text="Добавьте заметку",
                              verbose_name="Примечание",
@@ -378,7 +379,7 @@ class Corporation(models.Model):
                             null=True, blank=True)
     establishments = models.ManyToManyField('Establishment',
                                             help_text='Выберите заведения, входящие в это предприятие',
-                                            verbose_name="Список точек")
+                                            verbose_name="Список точек", blank=True)
     other = models.CharField(max_length=200,
                              help_text="Добавьте заметку",
                              verbose_name="Примечание",

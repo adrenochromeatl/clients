@@ -1,0 +1,84 @@
+{% extends "directory/base.html" %}
+{% block content %}
+    {% if contact %}
+        <h1>Удаление {{ contact }}</h1>
+        <p> Вы уверены, что хотите удалить <strong>"{{ contact }}"</strong>?</p>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="submit" action="" value="Да, удалить" />
+        </form>
+    {% elif corporation %}
+        <h1>Удаление {{ corporation }}</h1>
+        <p> Вы уверены, что хотите удалить <strong>"{{ corporation }}"</strong>?</p>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="submit" action="" value="Да, удалить" />
+        </form>
+    {% elif establishment %}
+        <h1>Удаление {{ establishment }}</h1>
+        <p> Вы уверены, что хотите удалить <strong>"{{ establishment }}"</strong>?</p>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="submit" action="" value="Да, удалить" />
+        </form>
+    {% elif fiscalregistrar %}
+        <h1>Удаление {{ fiscalregistrar }}</h1>
+        <p> Вы уверены, что хотите удалить <strong>"{{ fiscalregistrar }}"</strong>?</p>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="submit" action="" value="Да, удалить" />
+        </form>
+    {% elif fiscalstorage %}
+        <h1>Удаление {{ fiscalstorage }}</h1>
+        <p> Вы уверены, что хотите удалить <strong>"{{ fiscalstorage }}"</strong>?</p>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="submit" action="" value="Да, удалить" />
+        </form>
+    {% elif legal %}
+        <h1>Удаление {{ legal }}</h1>
+        <p> Вы уверены, что хотите удалить <strong>"{{ legal }}"</strong>?</p>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="submit" action="" value="Да, удалить" />
+        </form>
+    {% elif ofd %}
+        <h1>Удаление {{ ofd }}</h1>
+        <p> Вы уверены, что хотите удалить <strong>"{{ ofd }}"</strong>?</p>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="submit" action="" value="Да, удалить" />
+        </form>
+    {% elif optequip %}
+        <h1>Удаление {{ optequip }}</h1>
+        <p> Вы уверены, что хотите удалить <strong>"{{ optequip }}"</strong>?</p>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="submit" action="" value="Да, удалить" />
+        </form>
+    {% elif printer %}
+        <h1>Удаление {{ printer }}</h1>
+        <p> Вы уверены, что хотите удалить <strong>"{{ printer }}"</strong>?</p>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="submit" action="" value="Да, удалить" />
+        </form>
+    {% elif station %}
+        <h1>Удаление {{ station }}</h1>
+        <p> Вы уверены, что хотите удалить <strong>"{{ station }}"</strong>?</p>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="submit" action="" value="Да, удалить" />
+        </form>
+    {% elif version %}
+        <h1>Удаление {{ version }}</h1>
+        <p> Вы уверены, что хотите удалить <strong>"{{ version }}"</strong>?</p>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="submit" action="" value="Да, удалить" />
+        </form>
+    {% else %}
+        <p>В БД нет данных</p>
+    {% endif %}
+
+{% endblock %}

@@ -94,9 +94,17 @@
              <div class="col-2 ">
                  {% block sidebar %}
                  <nav class="nav flex-column">
-                    <a class="nav-link" href="{% url 'corporation' %}">Список компаний</a>
-                    <a class="nav-link" href="{% url 'corporation-create' %}">Создать компанию</a>
-                    <a class="nav-link" href="{% url 'fiscalregistrar' %}">Список ФРов</a>
+                    <a class="nav-link" href="{% url 'contact' %}">Контакты</a>
+                    <a class="nav-link" href="{% url 'corporation' %}">Компании</a>
+                    <a class="nav-link" href="{% url 'establishment' %}">Заведения</a>
+                    <a class="nav-link" href="{% url 'fiscalregistrar' %}">Фискальные Регистраторы</a>
+                    <a class="nav-link" href="{% url 'fiscalstorage' %}">Фискальные Накопители</a>
+                    <a class="nav-link" href="{% url 'legal' %}">Юр. Лица</a>
+                    <a class="nav-link" href="{% url 'ofd' %}">ОФД</a>
+                    <a class="nav-link" href="{% url 'optequip' %}">Доп. оборудование</a>
+                    <a class="nav-link" href="{% url 'printer' %}">Принтеры</a>
+                    <a class="nav-link" href="{% url 'station' %}">Станции</a>
+                    <a class="nav-link" href="{% url 'version' %}">Версии</a>
                     {% if user.is_authenticated %}
                         <a class="nav-link" href="{% url 'logout' %}?next={{ request.path }}">Выход</a>
                         <div>Вошел: {{ user.get_username }}</div>
