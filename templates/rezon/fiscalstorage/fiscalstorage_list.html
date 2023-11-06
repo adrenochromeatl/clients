@@ -1,0 +1,36 @@
+{% extends "rezon/base.html" %}
+{% block content %}
+    <div class="row text-center text-dark lh-2">
+        <h4>Список ФН в БД</h4>
+    </div>
+    {% if fiscalstorage %}
+        <button class="button col-2">
+            <a class="text-start" href="{% url 'fiscalstorage-create' %}">Добавить ФН</a>
+        </button>
+        <table class="table table-striped table-bordered text-start">
+            <thead>
+                <tr>
+                    <th>Заводской номер</th>
+                    <th>Дата окончания</th>
+                    <th>Модель</th>
+                    <th>Редактировать</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj in fiscalstorage %}
+                    <tr>
+                        <td><a href="{{ obj.id }}">{{ obj.number }}</a></td>
+                        <td>{{ obj.validity }}</td>
+                        <td>{{ obj.model }}</td>
+                        <td>
+                            <a href="update/{{ obj.id }}">Изменить</a></br>
+                            <a href="delete/{{ obj.id }}">Удалить</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>В базе данных нет ни одного ФН</p>
+    {% endif %}
+{% endblock content %}

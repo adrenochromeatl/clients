@@ -1,0 +1,12 @@
+{% extends "rezon/base.html" %}
+{% block content %}
+
+<h1>Удаление Юр лица</h1>
+<p> Вы уверены, что хотите удалить Юр лицо <strong>"{{ legal }}"</strong>?</p>
+
+<form action="" method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  <input type="submit" action="" value="Да, удалить" />
+</form>
+
+{% endblock %}

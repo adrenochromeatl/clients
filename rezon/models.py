@@ -49,13 +49,12 @@ class Legal(models.Model):
 class FiscalStorage(models.Model):
     number = models.CharField(max_length=16,
                               help_text="Введите заводской номер ФН",
-                              verbose_name="Заводской номер",
-                              primary_key=True)
+                              verbose_name="Заводской номер")
     validity = models.DateField(help_text="Введите дату окончания ФН",
                                 verbose_name="Срок действия ФН",
                                 null=True, blank=True)
     model = models.ForeignKey('ModelFiscalStorage', on_delete=models.DO_NOTHING,
-                              help_text="Введите модель ФН(Например: 'Ин15-3'",
+                              help_text="Введите модель ФН(Например: 'Ин15-3')",
                               verbose_name="Модель")
     other = models.CharField(max_length=200,
                              help_text="Добавьте заметку",
@@ -66,7 +65,7 @@ class FiscalStorage(models.Model):
         return '%s, %s' % (self.number, self.validity)
 
     def get_absolute_url(self):
-        return reverse('fiscal-storage-detail', args=[str(self.number)])
+        return reverse('fiscalstorage-detail', args=[str(self.id)])
 
     class Meta:
         ordering = ["validity"]
@@ -89,7 +88,7 @@ class Ofd(models.Model):
     dns = models.CharField(max_length=20,
                            help_text="Введите DNS",
                            verbose_name="DNS")
-    timeout = models.CharField(max_length=3,
+    timeout = models.CharField(max_length=5,
                                help_text="Таймаут чтения",
                                verbose_name="Таймаут чтения",
                                null=True, blank=True)
@@ -153,7 +152,7 @@ class RDP(models.Model):
                              null=True, blank=True)
 
     def __str__(self):
-        return self.name
+        return '%s:%s (Логин: %s Пароль: %s)' % (self.ip, self.port, self.login, self.password)
 
     def get_absolute_url(self):
         return reverse('rdp-detail', args=[str(self.id)])
@@ -167,7 +166,7 @@ class Printers(models.Model):
                           help_text="Введите серийный номер принтера (необязательно)",
                           verbose_name="Серийный номер",
                           null=True, blank=True)
-    name = models.CharField(max_length=20,
+    name = models.CharField(max_length=50,
                             help_text="Введите имя в iiko (Например отделение, где размещен принтер",
                             verbose_name="Имя в iiko",
                             null=True, blank=True)
@@ -213,8 +212,7 @@ class FiscalRegistrar(models.Model):
                               verbose_name="Модель")
     zn = models.CharField(max_length=30,
                           help_text="Введите ЗАВОДСКОЙ номер",
-                          verbose_name="Заводской номер",
-                          primary_key=True)
+                          verbose_name="Заводской номер")
     rn = models.CharField(max_length=30,
                           help_text="Введите РЕГИСТРАЦИОННЫЙ номер",
                           verbose_name="Регистрационный номер")
@@ -238,7 +236,7 @@ class FiscalRegistrar(models.Model):
         return '%s, %s, ФН %s' % (self.legal, self.rn, self.fn)
 
     def get_absolute_url(self):
-        return reverse('fiscal-reg-detail', args=[str(self.id)])
+        return reverse('fiscalregistrar-detail', args=[str(self.id)])
 
     class Meta:
         ordering = ['legal']
@@ -255,15 +253,15 @@ class Station(models.Model):
     fr = models.ManyToManyField('FiscalRegistrar',
                                 help_text="Выберите ФР, если он(они) подключен к этой станции",
                                 verbose_name="Фискальный регистратор",
-                                null=True, blank=True)
+                                null=True, blank=True, related_name="+")
     printers = models.ManyToManyField('Printers',
                                       help_text="Выберите принтер или принтеры, если они привязаны к это станции",
                                       verbose_name="Принтеры",
-                                      null=True, blank=True)
+                                      null=True, blank=True, related_name="+")
     optequip = models.ManyToManyField('OptEquip',
                                       help_text="Выберите доп оборудование, если оно привязано к это станции",
                                       verbose_name="Доп. оборудование",
-                                      null=True, blank=True)
+                                      null=True, blank=True, related_name="+")
     anylogin = models.CharField(max_length=10,
                                 help_text="Введите логин Anydesk",
                                 verbose_name="Логин Anydesk")
@@ -396,6 +394,9 @@ class Corporation(models.Model):
 
     def get_absolute_id(self):
         return reverse('corporation-detail', args=[str(self.id)])
+
+    class Meta:
+        ordering = ["name"]
 
 
 class ModelFiscalRegistrar(models.Model):

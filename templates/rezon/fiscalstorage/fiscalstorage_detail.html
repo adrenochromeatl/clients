@@ -1,0 +1,17 @@
+{% extends 'rezon/base.html' %}
+{% block content %}
+    <div class="container text-start">
+        <div class="row my-2">
+            <p><strong>Регистрационный номер: </strong>{{ fiscalstorage.number }}</p>
+        </div>
+        <div class="row my-2">
+            <p><strong>Модель: </strong>{{ fiscalstorage.model }}</p>
+        </div>
+        <div class="row my-2">
+            <p><strong>Срок до: </strong>{{ fiscalstorage.validity }}</p>
+        </div>
+        <div class="row my-2">
+            <p><strong>Заметка: </strong>{{ fiscalstorage.other }}</p>
+        </div>
+    </div>
+{% endblock content %}

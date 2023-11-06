@@ -1,0 +1,34 @@
+{% extends "rezon/base.html" %}
+{% block content %}
+    <div class="row text-center text-dark lh-2">
+        <h4>Список юр лиц в БД</h4>
+    </div>
+    {% if legal %}
+        <button class="button col-2">
+            <a class="text-start" href="{% url 'legal-create' %}">Добавить</a>
+        </button>
+        <table class="table table-striped table-bordered text-start">
+            <thead>
+                <tr>
+                    <th>Наименование</th>
+                    <th>ИНН</th>
+                    <th>Редактировать</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj in legal %}
+                    <tr>
+                        <td><a href="{{ obj.id }}">{{ obj.name }}</a></td>
+                        <td>{{ obj.inn }}</td>
+                        <td>
+                            <a href="update/{{ obj.id }}">Изменить</a></br>
+                            <a href="delete/{{ obj.id }}">Удалить</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>В базе нет данных</p>
+    {% endif %}
+{% endblock content %}

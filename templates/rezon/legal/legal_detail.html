@@ -1,0 +1,14 @@
+{% extends 'rezon/base.html' %}
+{% block content %}
+    <div class="container text-start">
+        <div class="row my-2">
+            <p><strong>Наименование: </strong>{{ legal.name }}</p>
+        </div>
+        <div class="row my-2">
+            <p><strong>ИНН: </strong>{{ legal.inn }}</p>
+        </div>
+        <div class="row my-2">
+            <p><strong>Заметка: </strong>{{ legal.other }}</p>
+        </div>
+    </div>
+{% endblock content %}
