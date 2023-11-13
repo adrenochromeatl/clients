@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponseNotFound, HttpResponseRedirect
 from .models import Corporation, Establishment, Station, FiscalRegistrar, FiscalStorage, Contact, Printer, Legal, Ofd, \
-    OptEquip, Version, RDP
+    OptEquip, Version, RDP, ModelFiscalRegistrar, ModelFiscalStorage, TypeEq
 from django.views.generic import ListView, DetailView
 from datetime import datetime
 from django.urls import reverse, reverse_lazy
@@ -30,14 +30,15 @@ class ContactDetail(DetailView):
 
 class ContactCreate(CreateView):
     model = Contact
-    fields = '__all__'
     context_object_name = 'contact'
+    fields = '__all__'
     success_url = reverse_lazy('contact')
     template_name = 'directory/form.html'
 
 
 class ContactUpdate(UpdateView):
     model = Contact
+    context_object_name = 'contact'
     fields = '__all__'
     success_url = reverse_lazy('contact')
     template_name = 'directory/form.html'
@@ -65,16 +66,16 @@ class CorporationDetail(DetailView):
 
 class CorporationCreate(CreateView):
     model = Corporation
-    fields = '__all__'
     context_object_name = 'corporation'
+    fields = '__all__'
     success_url = reverse_lazy('corporation')
     template_name = 'directory/form.html'
 
 
 class CorporationUpdate(UpdateView):
     model = Corporation
-    fields = '__all__'
     context_object_name = 'corporation'
+    fields = '__all__'
     success_url = reverse_lazy('corporation')
     template_name = 'directory/form.html'
 
@@ -101,6 +102,7 @@ class EstablishmentDetail(DetailView):
 
 class EstablishmentCreate(CreateView):
     model = Establishment
+    context_object_name = 'establishment'
     fields = '__all__'
     success_url = reverse_lazy('establishment')
     template_name = 'directory/form.html'
@@ -108,6 +110,7 @@ class EstablishmentCreate(CreateView):
 
 class EstablishmentUpdate(UpdateView):
     model = Establishment
+    context_object_name = 'establishment'
     fields = '__all__'
     success_url = reverse_lazy('establishment')
     template_name = 'directory/form.html'
@@ -135,6 +138,7 @@ class FiscalRegistrarDetail(DetailView):
 
 class FiscalRegistrarCreate(CreateView):
     model = FiscalRegistrar
+    object = 'fiscalregistrar'
     fields = '__all__'
     success_url = reverse_lazy('fiscalregistrar')
     template_name = 'directory/form.html'
@@ -142,6 +146,7 @@ class FiscalRegistrarCreate(CreateView):
 
 class FiscalRegistrarUpdate(UpdateView):
     model = FiscalRegistrar
+    context_object_name = 'fiscalregistrar'
     fields = '__all__'
     success_url = reverse_lazy('fiscalregistrar')
     template_name = 'directory/form.html'
@@ -169,6 +174,7 @@ class FiscalStorageDetail(DetailView):
 
 class FiscalStorageCreate(CreateView):
     model = FiscalStorage
+    context_object_name = 'fiscalstorage'
     fields = '__all__'
     success_url = reverse_lazy('fiscalstorage')
     template_name = 'directory/form.html'
@@ -176,6 +182,7 @@ class FiscalStorageCreate(CreateView):
 
 class FiscalStorageUpdate(UpdateView):
     model = FiscalStorage
+    context_object_name = 'fiscalstorage'
     fields = '__all__'
     success_url = reverse_lazy('fiscalstorage')
     template_name = 'directory/form.html'
@@ -203,6 +210,7 @@ class LegalDetail(DetailView):
 
 class LegalCreate(CreateView):
     model = Legal
+    context_object_name = 'legal'
     fields = '__all__'
     success_url = reverse_lazy('legal')
     template_name = 'directory/form.html'
@@ -210,6 +218,7 @@ class LegalCreate(CreateView):
 
 class LegalUpdate(UpdateView):
     model = Legal
+    context_object_name = 'legal'
     fields = '__all__'
     success_url = reverse_lazy('legal')
     template_name = 'directory/form.html'
@@ -219,6 +228,78 @@ class LegalDelete(DeleteView):
     model = Legal
     context_object_name = 'legal'
     success_url = reverse_lazy('legal')
+    template_name = 'directory/confirm_delete.html'
+
+
+class ModelFiscalRegistrarList(ListView):
+    model = ModelFiscalRegistrar
+    context_object_name = 'modelfiscalregistrar'
+    template_name = 'directory/list.html'
+    paginate_by = 10
+
+
+class ModelFiscalRegistrarDetail(DetailView):
+    model = ModelFiscalRegistrar
+    context_object_name = 'modelfiscalregistrar'
+    template_name = 'directory/detail.html'
+
+
+class ModelFiscalRegistrarCreate(CreateView):
+    model = ModelFiscalRegistrar
+    context_object_name = 'modelfiscalregistrar'
+    fields = '__all__'
+    success_url = reverse_lazy('modelfiscalregistrar')
+    template_name = 'directory/form.html'
+
+
+class ModelFiscalRegistrarUpdate(UpdateView):
+    model = ModelFiscalRegistrar
+    context_object_name = 'modelfiscalregistrar'
+    fields = '__all__'
+    success_url = reverse_lazy('modelfiscalregistrar')
+    template_name = 'directory/form.html'
+
+
+class ModelFiscalRegistrarDelete(DeleteView):
+    model = ModelFiscalRegistrar
+    context_object_name = 'modelfiscalregistrar'
+    success_url = reverse_lazy('modelfiscalregistrar')
+    template_name = 'directory/confirm_delete.html'
+
+
+class ModelFiscalStorageList(ListView):
+    model = ModelFiscalStorage
+    context_object_name = 'modelfiscalstorage'
+    template_name = 'directory/list.html'
+    paginate_by = 10
+
+
+class ModelFiscalStorageDetail(DetailView):
+    model = ModelFiscalStorage
+    context_object_name = 'modelfiscalstorage'
+    template_name = 'directory/detail.html'
+
+
+class ModelFiscalStorageCreate(CreateView):
+    model = ModelFiscalStorage
+    context_object_name = 'modelfiscalstorage'
+    fields = '__all__'
+    success_url = reverse_lazy('modelfiscalstorage')
+    template_name = 'directory/form.html'
+
+
+class ModelFiscalStorageUpdate(UpdateView):
+    model = ModelFiscalStorage
+    context_object_name = 'modelfiscalstorage'
+    fields = '__all__'
+    success_url = reverse_lazy('modelfiscalstorage')
+    template_name = 'directory/form.html'
+
+
+class ModelFiscalStorageDelete(DeleteView):
+    model = ModelFiscalStorage
+    context_object_name = 'modelfiscalstorage'
+    success_url = reverse_lazy('modelfiscalstorage')
     template_name = 'directory/confirm_delete.html'
 
 
@@ -237,6 +318,7 @@ class OfdDetail(DetailView):
 
 class OfdCreate(CreateView):
     model = Ofd
+    context_object_name = 'ofd'
     fields = '__all__'
     success_url = reverse_lazy('ofd')
     template_name = 'directory/form.html'
@@ -244,6 +326,7 @@ class OfdCreate(CreateView):
 
 class OfdUpdate(UpdateView):
     model = Ofd
+    context_object_name = 'ofd'
     fields = '__all__'
     success_url = reverse_lazy('ofd')
     template_name = 'directory/form.html'
@@ -271,6 +354,7 @@ class OptEquipDetail(DetailView):
 
 class OptEquipCreate(CreateView):
     model = OptEquip
+    context_object_name = 'optequip'
     fields = '__all__'
     success_url = reverse_lazy('optequip')
     template_name = 'directory/form.html'
@@ -278,6 +362,7 @@ class OptEquipCreate(CreateView):
 
 class OptEquipUpdate(UpdateView):
     model = OptEquip
+    context_object_name = 'optequip'
     fields = '__all__'
     success_url = reverse_lazy('optequip')
     template_name = 'directory/form.html'
@@ -305,6 +390,7 @@ class PrinterDetail(DetailView):
 
 class PrinterCreate(CreateView):
     model = Printer
+    context_object_name = 'printer'
     fields = '__all__'
     success_url = reverse_lazy('printer')
     template_name = 'directory/form.html'
@@ -312,6 +398,7 @@ class PrinterCreate(CreateView):
 
 class PrinterUpdate(UpdateView):
     model = Printer
+    context_object_name = 'printer'
     fields = '__all__'
     success_url = reverse_lazy('printer')
     template_name = 'directory/form.html'
@@ -321,75 +408,6 @@ class PrinterDelete(DeleteView):
     model = Printer
     context_object_name = 'printer'
     success_url = reverse_lazy('printer')
-    template_name = 'directory/confirm_delete.html'
-
-
-class StationList(ListView):
-    model = Station
-    context_object_name = 'station'
-    template_name = 'directory/list.html'
-    paginate_by = 10
-
-
-class StationDetail(DetailView):
-    model = Station
-    context_object_name = 'station'
-    template_name = 'directory/detail.html'
-
-
-class StationCreate(CreateView):
-    model = Station
-    fields = '__all__'
-    success_url = reverse_lazy('station')
-    template_name = 'directory/form.html'
-
-
-class StationUpdate(UpdateView):
-    model = Station
-    fields = '__all__'
-    success_url = reverse_lazy('station')
-    template_name = 'directory/form.html'
-
-
-class StationDelete(DeleteView):
-    model = Station
-    context_object_name = 'station'
-    success_url = reverse_lazy('station')
-    template_name = 'directory/confirm_delete.html'
-
-
-class VersionList(ListView):
-    model = Version
-    context_object_name = 'version'
-    template_name = 'directory/list.html'
-    ordering = ['-name']
-    paginate_by = 10
-
-
-class VersionDetail(DetailView):
-    model = Version
-    context_object_name = 'version'
-    template_name = 'directory/detail.html'
-
-
-class VersionCreate(CreateView):
-    model = Version
-    fields = '__all__'
-    success_url = reverse_lazy('version')
-    template_name = 'directory/form.html'
-
-
-class VersionUpdate(UpdateView):
-    model = Version
-    fields = '__all__'
-    success_url = reverse_lazy('version')
-    template_name = 'directory/form.html'
-
-
-class VersionDelete(DeleteView):
-    model = Version
-    context_object_name = 'version'
-    success_url = reverse_lazy('version')
     template_name = 'directory/confirm_delete.html'
 
 
@@ -408,6 +426,7 @@ class RDPDetail(DetailView):
 
 class RDPCreate(CreateView):
     model = RDP
+    context_object_name = 'rdp'
     fields = '__all__'
     success_url = reverse_lazy('rdp')
     template_name = 'directory/form.html'
@@ -415,6 +434,7 @@ class RDPCreate(CreateView):
 
 class RDPUpdate(UpdateView):
     model = RDP
+    context_object_name = 'rdp'
     fields = '__all__'
     success_url = reverse_lazy('rdp')
     template_name = 'directory/form.html'
@@ -424,5 +444,114 @@ class RDPDelete(DeleteView):
     model = RDP
     context_object_name = 'rdp'
     success_url = reverse_lazy('rdp')
+    template_name = 'directory/confirm_delete.html'
+
+
+class StationList(ListView):
+    model = Station
+    context_object_name = 'station'
+    template_name = 'directory/list.html'
+    paginate_by = 10
+
+
+class StationDetail(DetailView):
+    model = Station
+    context_object_name = 'station'
+    template_name = 'directory/detail.html'
+
+
+class StationCreate(CreateView):
+    model = Station
+    context_object_name = 'station'
+    fields = '__all__'
+    success_url = reverse_lazy('station')
+    template_name = 'directory/form.html'
+
+
+class StationUpdate(UpdateView):
+    model = Station
+    context_object_name = 'station'
+    fields = '__all__'
+    success_url = reverse_lazy('station')
+    template_name = 'directory/form.html'
+
+
+class StationDelete(DeleteView):
+    model = Station
+    context_object_name = 'station'
+    success_url = reverse_lazy('station')
+    template_name = 'directory/confirm_delete.html'
+
+
+class TypeEqList(ListView):
+    model = TypeEq
+    context_object_name = 'typeeq'
+    template_name = 'directory/list.html'
+    paginate_by = 10
+
+
+class TypeEqDetail(DetailView):
+    model = TypeEq
+    context_object_name = 'typeeq'
+    template_name = 'directory/detail.html'
+
+
+class TypeEqCreate(CreateView):
+    model = TypeEq
+    context_object_name = 'typeeq'
+    fields = '__all__'
+    success_url = reverse_lazy('typeeq')
+    template_name = 'directory/form.html'
+
+
+class TypeEqUpdate(UpdateView):
+    model = TypeEq
+    context_object_name = 'typeeq'
+    fields = '__all__'
+    success_url = reverse_lazy('typeeq')
+    template_name = 'directory/form.html'
+
+
+class TypeEqDelete(DeleteView):
+    model = Station
+    context_object_name = 'typeeq'
+    success_url = reverse_lazy('typeeq')
+    template_name = 'directory/confirm_delete.html'
+
+
+class VersionList(ListView):
+    model = Version
+    context_object_name = 'version'
+    template_name = 'directory/list.html'
+    ordering = ['-name']
+    paginate_by = 20
+
+
+class VersionDetail(DetailView):
+    model = Version
+    context_object_name = 'version'
+    template_name = 'directory/detail.html'
+
+
+class VersionCreate(CreateView):
+    model = Version
+    context_object_name = 'version'
+    fields = '__all__'
+    success_url = reverse_lazy('version')
+    template_name = 'directory/form.html'
+
+
+class VersionUpdate(UpdateView):
+    model = Version
+    context_object_name = 'version'
+    fields = '__all__'
+    success_url = reverse_lazy('version')
+    template_name = 'directory/form.html'
+
+
+class VersionDelete(DeleteView):
+    model = Version
+    context_object_name = 'version'
+    success_url = reverse_lazy('version')
     template_name = 'directory/confirm_delete.html'
 

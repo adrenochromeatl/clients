@@ -2,48 +2,152 @@ from django.db import models
 from django.urls import reverse
 
 
-class TypeEq(models.Model):
-    name = models.CharField(max_length=30,
-                            help_text="Введите название типа оборудования",
-                            verbose_name="Тип дополнительного оборудования")
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ["name"]
-
-
-class Version(models.Model):
-    name = models.CharField(max_length=11,
-                            help_text="Введите номер версии",
-                            verbose_name="Версия iiko")
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ["name"]
-
-
-class Legal(models.Model):
-    name = models.CharField(max_length=30,
-                            help_text="Введите наименование юр. лица",
-                            verbose_name="Юр. лицо")
-    inn = models.CharField(max_length=10,
-                           help_text="Введите ИНН юр. лица",
-                           verbose_name="ИНН",
-                           null=True, blank=True)
+class Contact(models.Model):
+    name = models.CharField(max_length=20,
+                            help_text="Введите Имя",
+                            verbose_name="Имя")
+    corporation = models.ManyToManyField('Corporation',
+                                         help_text="Выберите Заведение (или несколько), с которыми работает контакт",
+                                         verbose_name="Заведения", blank=True)
+    last_name = models.CharField(max_length=20,
+                                 help_text="Введите фамилию",
+                                 verbose_name="Фамилия",
+                                 null=True, blank=True)
+    position = models.CharField(max_length=20,
+                                help_text="Введите должность",
+                                verbose_name="Должность",
+                                null=True, blank=True)
+    phone = models.CharField(max_length=11,
+                             help_text="Введите номер телефона (с 7 без +)",
+                             verbose_name="Номер телефона")
+    telega = models.CharField(max_length=30,
+                              help_text="Введите ссылку/логин в Telegram",
+                              verbose_name="Telegram",
+                              null=True, blank=True)
     other = models.CharField(max_length=200,
                              help_text="Добавьте заметку",
                              verbose_name="Примечание",
                              null=True, blank=True)
 
     def __str__(self):
+        return '%s, %s' % (self.name, self.phone)
+
+    def get_absolute_url(self):
+        return reverse('contact-detail', args=[str(self.id)])
+
+
+class Corporation(models.Model):
+    name = models.CharField(max_length=50,
+                            help_text="Введите наименование организации",
+                            verbose_name="Организация")
+    iiko_server = models.CharField(max_length=50,
+                                   help_text="Введите адрес сервера",
+                                   verbose_name="Сервер iiko")
+    port = models.IntegerField(help_text="Введите порт для подключения",
+                               verbose_name="Порт", default="443")
+    version = models.ForeignKey('Version', on_delete=models.DO_NOTHING,
+                                help_text="Выберите версию iiko",
+                                verbose_name="Версия")
+    uid = models.CharField(max_length=50,
+                           help_text="Введите UID (необязательно)",
+                           verbose_name="UID",
+                           null=True, blank=True)
+    rdp = models.ForeignKey('RDP', on_delete=models.DO_NOTHING,
+                            help_text="Выберите RDP если есть",
+                            verbose_name="RDP",
+                            null=True, blank=True)
+    establishments = models.ManyToManyField('Establishment',
+                                            help_text='Выберите заведения, входящие в это предприятие',
+                                            verbose_name="Список заведений", blank=True)
+    other = models.CharField(max_length=200,
+                             help_text="Добавьте заметку",
+                             verbose_name="Примечание",
+                             null=True, blank=True)
+
+    def display_establishments(self):
+        return ', '.join([establishments.name for establishments in self.establishments.all()])
+
+    display_establishments.short_description = 'Точки'
+
+    def __str__(self):
         return self.name
+
+    def get_absolute_id(self):
+        return reverse('corporation-detail', args=[str(self.id)])
 
     class Meta:
         ordering = ["name"]
+
+
+class Establishment(models.Model):
+    name = models.CharField(max_length=50,
+                            help_text="Введите наименование заведения",
+                            verbose_name="Заведение")
+    stations = models.ManyToManyField('Station',
+                                      help_text="Выберите станции, установленные в этом заведении",
+                                      verbose_name="Станции", blank=True)
+    address = models.CharField(max_length=50,
+                               help_text="Введите адрес заведения",
+                               verbose_name="Адрес")
+    contact = models.ManyToManyField('Contact',
+                                     help_text="Выберите контактное лицо",
+                                     verbose_name="Контактное лицо", blank=True)
+    other = models.CharField(max_length=200,
+                             help_text="Добавьте заметку",
+                             verbose_name="Примечание",
+                             null=True, blank=True)
+
+    def __str__(self):
+        return '%s %s' % (self.name, self.address)
+
+    def display_stations(self):
+        return ', '.join([stations.stname for stations in self.stations.all()])
+
+    display_stations.short_description = 'Станции'
+
+    def display_contact(self):
+        return ', '.join([contact.name for contact in self.contact.all()])
+
+    display_contact.short_description = 'Контакты'
+
+    def get_absolute_id(self):
+        return reverse('establishment-detail', args=[str(self.id)])
+
+
+class FiscalRegistrar(models.Model):
+    model = models.ForeignKey('ModelFiscalRegistrar', on_delete=models.DO_NOTHING,
+                              help_text="Выберите модель оборудования",
+                              verbose_name="Модель")
+    zn = models.CharField(max_length=30,
+                          help_text="Введите ЗАВОДСКОЙ номер",
+                          verbose_name="Заводской номер")
+    rn = models.CharField(max_length=30,
+                          help_text="Введите РЕГИСТРАЦИОННЫЙ номер",
+                          verbose_name="Регистрационный номер")
+    reg_card = models.FileField(upload_to='reg_cards',
+                                verbose_name="Карточка ККТ",
+                                help_text="Прикрепите карточку ККТ",
+                                null=True, blank=True)
+    legal = models.ForeignKey('Legal', on_delete=models.DO_NOTHING,
+                              help_text="Выберите юр. лицо",
+                              verbose_name="Юр. лицо, на которое зарегистрирован ФР")
+    fn = models.ForeignKey('FiscalStorage', on_delete=models.DO_NOTHING,
+                           help_text="Выберите ФН",
+                           verbose_name="Фискальный накопитель, установленный в ФР",
+                           null=True, blank=True)
+    ofd = models.ForeignKey('Ofd', on_delete=models.DO_NOTHING,
+                            help_text="Выберите ОФД",
+                            verbose_name="ОФД",
+                            null=True, blank=True)
+
+    def __str__(self):
+        return '%s, %s, ФН %s' % (self.legal, self.rn, self.fn)
+
+    def get_absolute_url(self):
+        return reverse('fiscalregistrar-detail', args=[str(self.id)])
+
+    class Meta:
+        ordering = ['legal']
 
 
 class FiscalStorage(models.Model):
@@ -54,7 +158,9 @@ class FiscalStorage(models.Model):
                                 verbose_name="Срок действия ФН",
                                 null=True, blank=True)
     model = models.ForeignKey('ModelFiscalStorage', on_delete=models.DO_NOTHING,
-                              help_text="Введите модель ФН(Например: 'Ин15-3')",
+                              help_text="Выберите модель ФН, если в списке нет нужной модели, "
+                                        "<a href='/modelfiscalstorage/create/' target='_blank'>"
+                                        "добавьте её</a>",
                               verbose_name="Модель")
     other = models.CharField(max_length=200,
                              help_text="Добавьте заметку",
@@ -69,6 +175,50 @@ class FiscalStorage(models.Model):
 
     class Meta:
         ordering = ["validity"]
+
+
+class Legal(models.Model):
+    name = models.CharField(max_length=30,
+                            help_text="Введите наименование юр. лица",
+                            verbose_name="Юр. лицо")
+    inn = models.CharField(max_length=10,
+                           help_text="Введите ИНН юр. лица (Может быть пустым)",
+                           verbose_name="ИНН",
+                           null=True, blank=True)
+    other = models.CharField(max_length=200,
+                             help_text="Добавьте заметку (Может быть пустым)",
+                             verbose_name="Примечание",
+                             null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ["name"]
+
+
+class ModelFiscalRegistrar(models.Model):
+    name = models.CharField(max_length=30,
+                            help_text="Введите модель ФР",
+                            verbose_name="Модель ФР")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ["name"]
+
+
+class ModelFiscalStorage(models.Model):
+    name = models.CharField(max_length=30,
+                            help_text="Введите модель Фискального Накопителя",
+                            verbose_name="Модель Фискального Накопителя")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ["name"]
 
 
 class Ofd(models.Model):
@@ -132,30 +282,28 @@ class Ofd(models.Model):
         ordering = ["name"]
 
 
-class RDP(models.Model):
-    name = models.CharField(max_length=25,
-                            help_text="Дайте имя подключению (Например на чей сервер это подключение)",
-                            verbose_name="Название")
-    ip = models.GenericIPAddressField(help_text="Введите IP",
-                                      verbose_name="IP")
-    port = models.IntegerField(help_text="Введите порт для подключения",
-                               verbose_name="Порт")
-    login = models.CharField(max_length=20,
-                             help_text="Введите логин",
-                             verbose_name="Логин")
-    password = models.CharField(max_length=20,
-                                help_text="Введите пароль",
-                                verbose_name="Пароль")
+class OptEquip(models.Model):
+    model = models.CharField(max_length=20,
+                             help_text="Введите модель оборудования",
+                             verbose_name="Модель")
+    type_equip = models.ForeignKey('TypeEq',
+                                   on_delete=models.DO_NOTHING,
+                                   help_text="Выберите тип оборудования",
+                                   verbose_name="Тип оборудования")
+    sn = models.CharField(max_length=30,
+                          help_text="Введите серийный номер оборудования (необязательно)",
+                          verbose_name="Серийный номер",
+                          null=True, blank=True)
     other = models.CharField(max_length=200,
                              help_text="Добавьте заметку",
                              verbose_name="Примечание",
                              null=True, blank=True)
 
     def __str__(self):
-        return '%s:%s (Логин: %s Пароль: %s)' % (self.ip, self.port, self.login, self.password)
+        return '%s, %s' % (self.type_equip, self.model)
 
     def get_absolute_url(self):
-        return reverse('rdp-detail', args=[str(self.id)])
+        return reverse('opt-equip-detail', args=[str(self.id)])
 
 
 class Printer(models.Model):
@@ -182,64 +330,30 @@ class Printer(models.Model):
         return reverse('printer-detail', args=[str(self.id)])
 
 
-class OptEquip(models.Model):
-    model = models.CharField(max_length=20,
-                             help_text="Введите модель оборудования",
-                             verbose_name="Модель")
-    type_equip = models.ForeignKey('TypeEq',
-                                   on_delete=models.DO_NOTHING,
-                                   help_text="Выберите тип оборудования",
-                                   verbose_name="Тип оборудования")
-    sn = models.CharField(max_length=30,
-                          help_text="Введите серийный номер оборудования (необязательно)",
-                          verbose_name="Серийный номер",
-                          null=True, blank=True)
+class RDP(models.Model):
+    name = models.CharField(max_length=25,
+                            help_text="Дайте имя подключению (Например на чей сервер это подключение)",
+                            verbose_name="Название")
+    ip = models.GenericIPAddressField(help_text="Введите IP",
+                                      verbose_name="IP")
+    port = models.IntegerField(help_text="Введите порт для подключения",
+                               verbose_name="Порт")
+    login = models.CharField(max_length=20,
+                             help_text="Введите логин",
+                             verbose_name="Логин")
+    password = models.CharField(max_length=20,
+                                help_text="Введите пароль",
+                                verbose_name="Пароль")
     other = models.CharField(max_length=200,
                              help_text="Добавьте заметку",
                              verbose_name="Примечание",
                              null=True, blank=True)
 
     def __str__(self):
-        return '%s, %s' % (self.type_equip, self.model)
+        return '%s:%s (Логин: %s Пароль: %s)' % (self.ip, self.port, self.login, self.password)
 
     def get_absolute_url(self):
-        return reverse('opt-equip-detail', args=[str(self.id)])
-
-
-class FiscalRegistrar(models.Model):
-    model = models.ForeignKey('ModelFiscalRegistrar', on_delete=models.DO_NOTHING,
-                              help_text="Выберите модель оборудования",
-                              verbose_name="Модель")
-    zn = models.CharField(max_length=30,
-                          help_text="Введите ЗАВОДСКОЙ номер",
-                          verbose_name="Заводской номер")
-    rn = models.CharField(max_length=30,
-                          help_text="Введите РЕГИСТРАЦИОННЫЙ номер",
-                          verbose_name="Регистрационный номер")
-    reg_card = models.FileField(upload_to='reg_cards',
-                                verbose_name="Карточка ККТ",
-                                help_text="Прикрепите карточку ККТ",
-                                null=True, blank=True)
-    legal = models.ForeignKey('Legal', on_delete=models.DO_NOTHING,
-                              help_text="Выберите юр. лицо",
-                              verbose_name="Юр. лицо, на которое зарегистрирован ФР")
-    fn = models.ForeignKey('FiscalStorage', on_delete=models.DO_NOTHING,
-                           help_text="Выберите ФН",
-                           verbose_name="Фискальный накопитель, установленный в ФР",
-                           null=True, blank=True)
-    ofd = models.ForeignKey('Ofd', on_delete=models.DO_NOTHING,
-                            help_text="Выберите ОФД",
-                            verbose_name="ОФД",
-                            null=True, blank=True)
-
-    def __str__(self):
-        return '%s, %s, ФН %s' % (self.legal, self.rn, self.fn)
-
-    def get_absolute_url(self):
-        return reverse('fiscalregistrar-detail', args=[str(self.id)])
-
-    class Meta:
-        ordering = ['legal']
+        return reverse('rdp-detail', args=[str(self.id)])
 
 
 class Station(models.Model):
@@ -288,122 +402,10 @@ class Station(models.Model):
         return reverse('station-detail', args=[str(self.id)])
 
 
-class Contact(models.Model):
-    name = models.CharField(max_length=20,
-                            help_text="Введите Имя",
-                            verbose_name="Имя")
-    corporation = models.ManyToManyField('Corporation',
-                                         help_text="Выберите Заведение (или несколько), с которыми работает контакт",
-                                         verbose_name="Заведения", blank=True)
-    last_name = models.CharField(max_length=20,
-                                 help_text="Введите фамилию",
-                                 verbose_name="Фамилия",
-                                 null=True, blank=True)
-    position = models.CharField(max_length=20,
-                                help_text="Введите должность",
-                                verbose_name="Должность",
-                                null=True, blank=True)
-    phone = models.CharField(max_length=11,
-                             help_text="Введите номер телефона (с 7 без +)",
-                             verbose_name="Номер телефона")
-    telega = models.CharField(max_length=30,
-                              help_text="Введите ссылку/логин в Telegram",
-                              verbose_name="Telegram",
-                              null=True, blank=True)
-    other = models.CharField(max_length=200,
-                             help_text="Добавьте заметку",
-                             verbose_name="Примечание",
-                             null=True, blank=True)
-
-    def __str__(self):
-        return '%s, %s' % (self.name, self.phone)
-
-    def get_absolute_url(self):
-        return reverse('contact-detail', args=[str(self.id)])
-
-
-class Establishment(models.Model):
-    name = models.CharField(max_length=50,
-                            help_text="Введите наименование заведения",
-                            verbose_name="Заведение")
-    stations = models.ManyToManyField('Station',
-                                      help_text="Выберите станции, установленные в этом заведении",
-                                      verbose_name="Станции", blank=True)
-    address = models.CharField(max_length=50,
-                               help_text="Введите адрес заведения",
-                               verbose_name="Адрес")
-    contact = models.ManyToManyField('Contact',
-                                     help_text="Выберите контактное лицо",
-                                     verbose_name="Контактное лицо", blank=True)
-    other = models.CharField(max_length=200,
-                             help_text="Добавьте заметку",
-                             verbose_name="Примечание",
-                             null=True, blank=True)
-
-    def __str__(self):
-        return '%s %s' % (self.name, self.address)
-
-    def display_stations(self):
-        return ', '.join([stations.stname for stations in self.stations.all()])
-
-    display_stations.short_description = 'Станции'
-
-    def display_contact(self):
-        return ', '.join([contact.name for contact in self.contact.all()])
-
-    display_contact.short_description = 'Контакты'
-
-    def get_absolute_id(self):
-        return reverse('establishment-detail', args=[str(self.id)])
-
-
-class Corporation(models.Model):
-    name = models.CharField(max_length=50,
-                            help_text="Введите наименование организации",
-                            verbose_name="Организация")
-    iiko_server = models.CharField(max_length=50,
-                                   help_text="Введите адрес сервера",
-                                   verbose_name="Сервер iiko")
-    port = models.IntegerField(help_text="Введите порт для подключения",
-                               verbose_name="Порт", default="443")
-    version = models.ForeignKey('Version', on_delete=models.DO_NOTHING,
-                                help_text="Выберите версию iiko",
-                                verbose_name="Версия")
-    uid = models.CharField(max_length=50,
-                           help_text="Введите UID (необязательно)",
-                           verbose_name="UID",
-                           null=True, blank=True)
-    rdp = models.ForeignKey('RDP', on_delete=models.DO_NOTHING,
-                            help_text="Выберите RDP если есть",
-                            verbose_name="RDP",
-                            null=True, blank=True)
-    establishments = models.ManyToManyField('Establishment',
-                                            help_text='Выберите заведения, входящие в это предприятие',
-                                            verbose_name="Список точек", blank=True)
-    other = models.CharField(max_length=200,
-                             help_text="Добавьте заметку",
-                             verbose_name="Примечание",
-                             null=True, blank=True)
-
-    def display_establishments(self):
-        return ', '.join([establishments.name for establishments in self.establishments.all()])
-
-    display_establishments.short_description = 'Точки'
-
-    def __str__(self):
-        return self.name
-
-    def get_absolute_id(self):
-        return reverse('corporation-detail', args=[str(self.id)])
-
-    class Meta:
-        ordering = ["name"]
-
-
-class ModelFiscalRegistrar(models.Model):
+class TypeEq(models.Model):
     name = models.CharField(max_length=30,
-                            help_text="Введите модель ФР",
-                            verbose_name="Модель ФР")
+                            help_text="Введите название типа оборудования",
+                            verbose_name="Тип дополнительного оборудования")
 
     def __str__(self):
         return self.name
@@ -412,10 +414,13 @@ class ModelFiscalRegistrar(models.Model):
         ordering = ["name"]
 
 
-class ModelFiscalStorage(models.Model):
-    name = models.CharField(max_length=30,
-                            help_text="Введите модель Фискального Накопителя",
-                            verbose_name="Модель Фискального Накопителя")
+class Version(models.Model):
+    name = models.CharField(max_length=11,
+                            help_text="Введите номер версии",
+                            verbose_name="Версия iiko")
+    href = models.CharField(max_length=300,
+                            verbose_name='Вставьте ссылку(Яндекс.Диск) на папку с версией',
+                            help_text='Ссылка на Яндекс.Диск', blank=True, null=True)
 
     def __str__(self):
         return self.name

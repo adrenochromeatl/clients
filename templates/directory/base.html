@@ -95,16 +95,35 @@
                  {% block sidebar %}
                  <nav class="nav flex-column">
                     <a class="nav-link" href="{% url 'contact' %}">Контакты</a>
+                    <a class="nav-link" href="{% url 'contact-create' %}">Добавить контакт</a>
                     <a class="nav-link" href="{% url 'corporation' %}">Компании</a>
+                    <a class="nav-link" href="{% url 'corporation-create' %}">Добавить компанию</a>
                     <a class="nav-link" href="{% url 'establishment' %}">Заведения</a>
+                    <a class="nav-link" href="{% url 'establishment-create' %}">Добавить заведение</a>
                     <a class="nav-link" href="{% url 'fiscalregistrar' %}">Фискальные Регистраторы</a>
+                    <a class="nav-link" href="{% url 'fiscalregistrar-create' %}">Добавить ФР</a>
                     <a class="nav-link" href="{% url 'fiscalstorage' %}">Фискальные Накопители</a>
+                    <a class="nav-link" href="{% url 'fiscalstorage-create' %}">Добавить ФН</a>
                     <a class="nav-link" href="{% url 'legal' %}">Юр. Лица</a>
+                    <a class="nav-link" href="{% url 'legal-create' %}">Добавить Юр. Лицо</a>
+                    <a class="nav-link" href="{% url 'modelfiscalregistrar' %}">Модели ФР</a>
+                    <a class="nav-link" href="{% url 'modelfiscalregistrar-create' %}">Добавить модель ФР</a>
+                    <a class="nav-link" href="{% url 'modelfiscalstorage' %}">Модели ФН</a>
+                    <a class="nav-link" href="{% url 'modelfiscalstorage-create' %}">Добавить модель ФН</a>
                     <a class="nav-link" href="{% url 'ofd' %}">ОФД</a>
+                    <a class="nav-link" href="{% url 'ofd-create' %}">Добавить ОФД</a>
                     <a class="nav-link" href="{% url 'optequip' %}">Доп. оборудование</a>
+                    <a class="nav-link" href="{% url 'optequip-create' %}">Добавить доп. оборудование</a>
                     <a class="nav-link" href="{% url 'printer' %}">Принтеры</a>
+                    <a class="nav-link" href="{% url 'printer-create' %}">Добавить принтер</a>
+                    <a class="nav-link" href="{% url 'rdp' %}">RDP</a>
+                    <a class="nav-link" href="{% url 'rdp-create' %}">Добавить RDP</a>
                     <a class="nav-link" href="{% url 'station' %}">Станции</a>
+                    <a class="nav-link" href="{% url 'station-create' %}">Добавить станцию</a>
+                    <a class="nav-link" href="{% url 'typeeq' %}">Типы доп. оборудования</a>
+                    <a class="nav-link" href="{% url 'typeeq-create' %}">Добавить тип доп. оборудования</a>
                     <a class="nav-link" href="{% url 'version' %}">Версии</a>
+                    <a class="nav-link" href="{% url 'version-create' %}">Добавить версии</a>
                     {% if user.is_authenticated %}
                         <a class="nav-link" href="{% url 'logout' %}?next={{ request.path }}">Выход</a>
                         <div>Вошел: {{ user.get_username }}</div>
@@ -114,7 +133,7 @@
                  </nav>
                  {% endblock sidebar %}
             </div>
-            <div class="col-10" >
+            <div class="col" >
                 <div class="row text-center">
                  {% block content%}
                  {% endblock content %}

@@ -22,10 +22,10 @@
                     <tr>
                         <td><a href="{{ obj.id }}">{{ obj.name }} {{ obj.last_name }}</a></td>
                         <td>{{ obj.position }}</td>
-                        <td>{{ obj.phone }} <a href="wa.me/{{ obj.phone }}">WA</a></td>
+                        <td>{{ obj.phone }} <a href="wa.me/{{ obj.phone }}" target="_blank">WA</a></td>
                         <td>
                             {% if obj.telega %}
-                                <a href="{{ obj.telega }}">Написать в Телеграм</a>
+                                <a href="{{ obj.telega }}" target="_blank">Написать в Телеграм</a>
                             {% else %}
                                 <p>Телеги нет</p>
                             {% endif %}
@@ -256,6 +256,58 @@
                 {% endfor %}
             </tbody>
         </table>
+    {% elif modelfiscalregistrar %}
+        <div class="row text-center text-dark lh-2">
+            <h4>Список моделей ФР</h4>
+        </div>
+        <button class="button col-2">
+            <a class="text-start" href="{% url 'modelfiscalregistrar-create' %}">Добавить модель ФР</a>
+        </button>
+        <table class="table table-striped table-bordered text-start">
+            <thead>
+                <tr>
+                    <th>Наименование</th>
+                    <th>Редактировать</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj in modelfiscalregistrar %}
+                    <tr>
+                        <td><a href="{{ obj.id }}">{{ obj.name }}</a></td>
+                        <td>
+                            <a href="update/{{ obj.id }}">Изменить</a></br>
+                            <a href="delete/{{ obj.id }}">Удалить</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% elif modelfiscalstorage %}
+        <div class="row text-center text-dark lh-2">
+            <h4>Список моделей ФН</h4>
+        </div>
+        <button class="button col-2">
+            <a class="text-start" href="{% url 'modelfiscalstorage-create' %}">Добавить модель ФН</a>
+        </button>
+        <table class="table table-striped table-bordered text-start">
+            <thead>
+                <tr>
+                    <th>Наименование</th>
+                    <th>Редактировать</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj in modelfiscalstorage %}
+                    <tr>
+                        <td><a href="{{ obj.id }}">{{ obj.name }}</a></td>
+                        <td>
+                            <a href="update/{{ obj.id }}">Изменить</a></br>
+                            <a href="delete/{{ obj.id }}">Удалить</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     {% elif ofd %}
         <div class="row text-center text-dark lh-2">
             <h4>Список ОФД</h4>
@@ -354,6 +406,38 @@
                 {% endfor %}
             </tbody>
         </table>
+    {% elif rdp %}
+        <div class="row text-center text-dark lh-2">
+            <h4>Список RDP</h4>
+        </div>
+        <button class="button col-2">
+            <a class="text-start" href="{% url 'rdp-create' %}">Добавить RDP</a>
+        </button>
+        <table class="table table-striped table-bordered text-start">
+            <thead>
+                <tr>
+                    <th>Наименование</th>
+                    <th>IP:PORT</th>
+                    <th>Логин</th>
+                    <th>Пароль</th>
+                    <th>Редактировать</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj in rdp %}
+                    <tr>
+                        <td><a href="{{ obj.id }}">{{ obj.name }}</a></td>
+                        <td>{{ obj.ip }}:{{ obj.port }}</td>
+                        <td>{{ obj.login }}</td>
+                        <td>{{ obj.password }}</td>
+                        <td>
+                            <a href="{% url 'rdp-update' pk=obj.id %}">Изменить</a></br>
+                            <a href="{% url 'rdp-delete' pk=obj.id %}">Удалить</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     {% elif station %}
         <div class="row text-center text-dark lh-2">
             <h4>Список станций</h4>
@@ -406,6 +490,32 @@
                 {% endfor %}
             </tbody>
         </table>
+    {% elif typeeq %}
+        <div class="row text-center text-dark lh-2">
+            <h4>Список типов доп. оборудования</h4>
+        </div>
+        <button class="button col-2">
+            <a class="text-start" href="{% url 'typeeq-create' %}">Добавить тип доп. оборудования</a>
+        </button>
+        <table class="table table-striped table-bordered text-start">
+            <thead>
+                <tr>
+                    <th>Наименование</th>
+                    <th>Редактировать</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for obj in typeeq %}
+                    <tr>
+                        <td><a href="{{ obj.id }}">{{ obj.name }}</a></td>
+                        <td>
+                            <a href="{% url 'typeeq-update' pk=obj.id %}">Изменить</a></br>
+                            <a href="{% url 'typeeq-delete' pk=obj.id %}">Удалить</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     {% elif version %}
         <div class="row text-center text-dark lh-2">
             <h4>Список версий</h4>
@@ -417,6 +527,7 @@
             <thead>
                 <tr>
                     <th>Наименование</th>
+                    <th>Ссылка</th>
                     <th>Редактировать</th>
                 </tr>
             </thead>
@@ -424,6 +535,7 @@
                 {% for obj in version %}
                     <tr>
                         <td><a href="{{ obj.id }}">{{ obj.name }}</a></td>
+                        <td><a href="{{ obj.href }}" target="_blank">Открыть папку с {{ obj.name }} версией</a></td>
                         <td>
                             <a href="{% url 'version-update' pk=obj.id %}">Изменить</a></br>
                             <a href="{% url 'version-delete' pk=obj.id %}">Удалить</a>
@@ -453,6 +565,12 @@
             <a class="text-start" href="{% url 'legal-create' %}">Добавить юр. лицо</a>
         </button>
         <button class="button col-2">
+            <a class="text-start" href="{% url 'modelfiscalregistrar-create' %}">Добавить модель ФР</a>
+        </button>
+        <button class="button col-2">
+            <a class="text-start" href="{% url 'modelfiscalstorage-create' %}">Добавить модель ФН</a>
+        </button>
+        <button class="button col-2">
             <a class="text-start" href="{% url 'ofd-create' %}">Добавить ОФД</a>
         </button>
         <button class="button col-2">
@@ -462,7 +580,13 @@
             <a class="text-start" href="{% url 'printer-create' %}">Добавить принтер</a>
         </button>
         <button class="button col-2">
+            <a class="text-start" href="{% url 'rdp-create' %}">Добавить RDP</a>
+        </button>
+        <button class="button col-2">
             <a class="text-start" href="{% url 'station-create' %}">Добавить станцию</a>
+        </button>
+        <button class="button col-2">
+            <a class="text-start" href="{% url 'typeeq-create' %}">Добавить тип доп. оборудования</a>
         </button>
         <button class="button col-2">
             <a class="text-start" href="{% url 'version-create' %}">Добавить версию</a>
