@@ -66,6 +66,8 @@
             </div>
             <div class="row my-2">
                 <p><strong>RDP сервера организации: </strong>{{ corporation.rdp }}</p>
+                <a href="rdp://{{ corporation.rdp.ip }}:{{ corporation.rdp.port }}">Подключиться к RDP</a>
+                <p>(работает, если на вашем ПК настроен URL Handler для RDP. Инструкция есть в БЗ</p>
             </div>
             <div class="row my-2">
                 <p><strong>Точки:</strong></p>

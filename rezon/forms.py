@@ -1,21 +1,19 @@
 from django import forms
 from datetime import date
-from .models import Corporation, Version
+from dateutil.relativedelta import relativedelta
+from .models import ModelFiscalStorage, FiscalStorage
 
 
-class AddCorporation(forms.ModelForm):
+class FiscalStorageCreate(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['model_fiscal_storage'].empty_label = "Модель не выбрана"
+        self.fields['validity'].initial = (date.today() + relativedelta(months=+15))
+
     class Meta:
-        model = Corporation
-        fields = '__all__'
-
-
-class AddVersion(forms.ModelForm):
-    class Meta:
-        model = Version
-        fields = '__all__'
-
-
-class EditCorporation(forms.ModelForm):
-    class Meta:
-        model = Corporation
-        fields = '__all__'
+        model = FiscalStorage
+        fields = ['number', 'validity', 'model_fiscal_storage', 'other']
+        widgets = {
+            'validity': forms.DateInput(attrs={'type': 'date'}),
+            'other': forms.Textarea(attrs={'cols': 30, 'rows': 5}),
+        }

@@ -6,6 +6,12 @@ from django.views.generic import ListView, DetailView
 from datetime import datetime
 from django.urls import reverse, reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from . import forms
+
+menu = [{'title': 'Справочник', 'url_name': 'handbook'},
+        {'title': 'База знаний', 'url_name': 'bz'},
+        {'title': 'Заявки', 'url_name': 'invoice'},
+        {'title': 'Чат - центр', 'url_name': 'tortuous'}]
 
 
 def index(request):
@@ -15,11 +21,33 @@ def index(request):
     return render(request, 'directory/index.html', context)
 
 
+def handbook(request):
+    return render(request, 'directory/index.html')
+
+
+def bz(request):
+    return render(request, 'directory/index.html')
+
+
+def invoice(request):
+    return render(request, 'directory/index.html')
+
+
+def tortuous(request):
+    return render(request, 'directory/index.html')
+
+
 class ContactList(ListView):
     model = Contact
     context_object_name = 'contact'
     template_name = 'directory/list.html'
     paginate_by = 10
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['menu'] = menu
+        context['title'] = 'Список контактов'
+        return context
 
 
 class ContactDetail(DetailView):
@@ -33,7 +61,7 @@ class ContactCreate(CreateView):
     context_object_name = 'contact'
     fields = '__all__'
     success_url = reverse_lazy('contact')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class ContactUpdate(UpdateView):
@@ -41,7 +69,7 @@ class ContactUpdate(UpdateView):
     context_object_name = 'contact'
     fields = '__all__'
     success_url = reverse_lazy('contact')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class ContactDelete(DeleteView):
@@ -69,7 +97,7 @@ class CorporationCreate(CreateView):
     context_object_name = 'corporation'
     fields = '__all__'
     success_url = reverse_lazy('corporation')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class CorporationUpdate(UpdateView):
@@ -77,7 +105,7 @@ class CorporationUpdate(UpdateView):
     context_object_name = 'corporation'
     fields = '__all__'
     success_url = reverse_lazy('corporation')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class CorporationDelete(DeleteView):
@@ -105,7 +133,7 @@ class EstablishmentCreate(CreateView):
     context_object_name = 'establishment'
     fields = '__all__'
     success_url = reverse_lazy('establishment')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class EstablishmentUpdate(UpdateView):
@@ -113,7 +141,7 @@ class EstablishmentUpdate(UpdateView):
     context_object_name = 'establishment'
     fields = '__all__'
     success_url = reverse_lazy('establishment')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class EstablishmentDelete(DeleteView):
@@ -141,7 +169,7 @@ class FiscalRegistrarCreate(CreateView):
     object = 'fiscalregistrar'
     fields = '__all__'
     success_url = reverse_lazy('fiscalregistrar')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class FiscalRegistrarUpdate(UpdateView):
@@ -149,7 +177,7 @@ class FiscalRegistrarUpdate(UpdateView):
     context_object_name = 'fiscalregistrar'
     fields = '__all__'
     success_url = reverse_lazy('fiscalregistrar')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class FiscalRegistrarDelete(DeleteView):
@@ -177,7 +205,19 @@ class FiscalStorageCreate(CreateView):
     context_object_name = 'fiscalstorage'
     fields = '__all__'
     success_url = reverse_lazy('fiscalstorage')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
+
+
+def new_fn(request):
+    if request.method == 'POST':
+        form = forms.FiscalStorageCreate(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('fiscalstorage'))
+    else:
+        form = forms.FiscalStorageCreate()
+        context = {"form": form}
+        return render(request, "directory/create_and_update_forms/fiscalstorage_form.html", context)
 
 
 class FiscalStorageUpdate(UpdateView):
@@ -185,11 +225,11 @@ class FiscalStorageUpdate(UpdateView):
     context_object_name = 'fiscalstorage'
     fields = '__all__'
     success_url = reverse_lazy('fiscalstorage')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class FiscalStorageDelete(DeleteView):
-    model = Establishment
+    model = FiscalStorage
     context_object_name = 'fiscalstorage'
     success_url = reverse_lazy('fiscalstorage')
     template_name = 'directory/confirm_delete.html'
@@ -213,7 +253,7 @@ class LegalCreate(CreateView):
     context_object_name = 'legal'
     fields = '__all__'
     success_url = reverse_lazy('legal')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class LegalUpdate(UpdateView):
@@ -221,7 +261,7 @@ class LegalUpdate(UpdateView):
     context_object_name = 'legal'
     fields = '__all__'
     success_url = reverse_lazy('legal')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class LegalDelete(DeleteView):
@@ -249,7 +289,7 @@ class ModelFiscalRegistrarCreate(CreateView):
     context_object_name = 'modelfiscalregistrar'
     fields = '__all__'
     success_url = reverse_lazy('modelfiscalregistrar')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class ModelFiscalRegistrarUpdate(UpdateView):
@@ -257,7 +297,7 @@ class ModelFiscalRegistrarUpdate(UpdateView):
     context_object_name = 'modelfiscalregistrar'
     fields = '__all__'
     success_url = reverse_lazy('modelfiscalregistrar')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class ModelFiscalRegistrarDelete(DeleteView):
@@ -285,7 +325,7 @@ class ModelFiscalStorageCreate(CreateView):
     context_object_name = 'modelfiscalstorage'
     fields = '__all__'
     success_url = reverse_lazy('modelfiscalstorage')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class ModelFiscalStorageUpdate(UpdateView):
@@ -293,7 +333,7 @@ class ModelFiscalStorageUpdate(UpdateView):
     context_object_name = 'modelfiscalstorage'
     fields = '__all__'
     success_url = reverse_lazy('modelfiscalstorage')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class ModelFiscalStorageDelete(DeleteView):
@@ -321,7 +361,7 @@ class OfdCreate(CreateView):
     context_object_name = 'ofd'
     fields = '__all__'
     success_url = reverse_lazy('ofd')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class OfdUpdate(UpdateView):
@@ -329,7 +369,7 @@ class OfdUpdate(UpdateView):
     context_object_name = 'ofd'
     fields = '__all__'
     success_url = reverse_lazy('ofd')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class OfdDelete(DeleteView):
@@ -357,7 +397,7 @@ class OptEquipCreate(CreateView):
     context_object_name = 'optequip'
     fields = '__all__'
     success_url = reverse_lazy('optequip')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class OptEquipUpdate(UpdateView):
@@ -365,7 +405,7 @@ class OptEquipUpdate(UpdateView):
     context_object_name = 'optequip'
     fields = '__all__'
     success_url = reverse_lazy('optequip')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class OptEquipDelete(DeleteView):
@@ -393,7 +433,7 @@ class PrinterCreate(CreateView):
     context_object_name = 'printer'
     fields = '__all__'
     success_url = reverse_lazy('printer')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class PrinterUpdate(UpdateView):
@@ -401,7 +441,7 @@ class PrinterUpdate(UpdateView):
     context_object_name = 'printer'
     fields = '__all__'
     success_url = reverse_lazy('printer')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class PrinterDelete(DeleteView):
@@ -429,7 +469,7 @@ class RDPCreate(CreateView):
     context_object_name = 'rdp'
     fields = '__all__'
     success_url = reverse_lazy('rdp')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class RDPUpdate(UpdateView):
@@ -437,7 +477,7 @@ class RDPUpdate(UpdateView):
     context_object_name = 'rdp'
     fields = '__all__'
     success_url = reverse_lazy('rdp')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class RDPDelete(DeleteView):
@@ -465,7 +505,7 @@ class StationCreate(CreateView):
     context_object_name = 'station'
     fields = '__all__'
     success_url = reverse_lazy('station')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class StationUpdate(UpdateView):
@@ -473,7 +513,7 @@ class StationUpdate(UpdateView):
     context_object_name = 'station'
     fields = '__all__'
     success_url = reverse_lazy('station')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class StationDelete(DeleteView):
@@ -501,7 +541,7 @@ class TypeEqCreate(CreateView):
     context_object_name = 'typeeq'
     fields = '__all__'
     success_url = reverse_lazy('typeeq')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class TypeEqUpdate(UpdateView):
@@ -509,7 +549,7 @@ class TypeEqUpdate(UpdateView):
     context_object_name = 'typeeq'
     fields = '__all__'
     success_url = reverse_lazy('typeeq')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class TypeEqDelete(DeleteView):
@@ -538,7 +578,7 @@ class VersionCreate(CreateView):
     context_object_name = 'version'
     fields = '__all__'
     success_url = reverse_lazy('version')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class VersionUpdate(UpdateView):
@@ -546,7 +586,7 @@ class VersionUpdate(UpdateView):
     context_object_name = 'version'
     fields = '__all__'
     success_url = reverse_lazy('version')
-    template_name = 'directory/form.html'
+    template_name = 'directory/create_and_update_forms/fiscalstorage_form.html'
 
 
 class VersionDelete(DeleteView):
@@ -554,4 +594,3 @@ class VersionDelete(DeleteView):
     context_object_name = 'version'
     success_url = reverse_lazy('version')
     template_name = 'directory/confirm_delete.html'
-

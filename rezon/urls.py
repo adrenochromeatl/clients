@@ -1,9 +1,13 @@
 from django.urls import path
-from .import views
+from .import views, forms
 
 urlpatterns = [
     path('', views.index, name='index'),
     path('contact/', views.ContactList.as_view(), name='contact'),
+    path('handbook/', views.handbook, name='handbook'),
+    path('bz/', views.bz, name='bz'),
+    path('invoice/', views.invoice, name='invoice'),
+    path('tortuous/', views.tortuous, name='tortuous'),
     path('contact/<int:pk>/', views.ContactDetail.as_view(), name='contact-detail'),
     path('contact/create/', views.ContactCreate.as_view(), name='contact-create'),
     path('contact/update/<int:pk>', views.ContactUpdate.as_view(), name='contact-update'),
@@ -20,12 +24,12 @@ urlpatterns = [
     path('establishment/delete/<int:pk>', views.EstablishmentDelete.as_view(), name='establishment-delete'),
     path('fiscalregistrar/', views.FiscalRegistrarList.as_view(), name='fiscalregistrar'),
     path('fiscalregistrar/<int:pk>/', views.FiscalRegistrarDetail.as_view(), name='fiscalregistrar-detail'),
-    path('fiscalregistrar/create/', views.FiscalStorageCreate.as_view(), name='fiscalregistrar-create'),
-    path('fiscalregistrar/update/<int:pk>/', views.FiscalStorageUpdate.as_view(), name='fiscalregistrar-update'),
-    path('fiscalregistrar/delete/<int:pk>/', views.FiscalStorageDelete.as_view(), name='fiscalregistrar-delete'),
+    path('fiscalregistrar/create/', views.FiscalRegistrarCreate.as_view(), name='fiscalregistrar-create'),
+    path('fiscalregistrar/update/<int:pk>/', views.FiscalRegistrarUpdate.as_view(), name='fiscalregistrar-update'),
+    path('fiscalregistrar/delete/<int:pk>/', views.FiscalRegistrarDelete.as_view(), name='fiscalregistrar-delete'),
     path('fiscalstorage/', views.FiscalStorageList.as_view(), name='fiscalstorage'),
     path('fiscalstorage/<int:pk>/', views.FiscalStorageDetail.as_view(), name='fiscalstorage-detail'),
-    path('fiscalstorage/create/', views.FiscalStorageCreate.as_view(), name='fiscalstorage-create'),
+    path('fiscalstorage/create/', views.new_fn, name='fiscalstorage-create'),
     path('fiscalstorage/update/<int:pk>', views.FiscalStorageUpdate.as_view(), name='fiscalstorage-update'),
     path('fiscalstorage/delete/<int:pk>', views.FiscalStorageDelete.as_view(), name='fiscalstorage-delete'),
     path('legal/', views.LegalList.as_view(), name='legal'),

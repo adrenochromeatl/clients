@@ -157,11 +157,9 @@ class FiscalStorage(models.Model):
     validity = models.DateField(help_text="Введите дату окончания ФН",
                                 verbose_name="Срок действия ФН",
                                 null=True, blank=True)
-    model = models.ForeignKey('ModelFiscalStorage', on_delete=models.DO_NOTHING,
-                              help_text="Выберите модель ФН, если в списке нет нужной модели, "
-                                        "<a href='/modelfiscalstorage/create/' target='_blank'>"
-                                        "добавьте её</a>",
-                              verbose_name="Модель")
+    model_fiscal_storage = models.ForeignKey('ModelFiscalStorage', on_delete=models.DO_NOTHING,
+                                             help_text='Выберите модель ФН',
+                                             verbose_name="Модель ФН")
     other = models.CharField(max_length=200,
                              help_text="Добавьте заметку",
                              verbose_name="Примечание",
